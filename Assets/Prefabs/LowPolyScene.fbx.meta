@@ -7,6 +7,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Barrel Rings
+    second: {fileID: 2100000, guid: 3a85c7d7e0faba84bbcffb89e11ae6c9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Grass
     second: {fileID: 2100000, guid: a9472519450735f40a59816d7b42bf57, type: 2}
   - first:
@@ -19,6 +24,16 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Light Leaves
     second: {fileID: 2100000, guid: 1db1cc3bfa5d96d45a1aa265aac5c89b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: a3a5b96fa6037004994862ca16b9bd90, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rock
+    second: {fileID: 2100000, guid: f2528cd0d28212943b4d346f0644042c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

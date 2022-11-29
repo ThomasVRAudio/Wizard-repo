@@ -15,7 +15,7 @@ public class AirSpellObject : SpellCreation
     {
         if(time < 1)
         {
-            gameObject.transform.localScale = Vector3.Lerp(new Vector3(0,0,0), new Vector3(30, 30, 30), curve.Evaluate(time));
+            gameObject.transform.localScale = Vector3.Lerp(new Vector3(0,0,0), new Vector3(400, 400, 400), curve.Evaluate(time)); // changed 30,30,30 to 200,200,200
             visibility = Mathf.Lerp(0, 1, visibilityCurve.Evaluate(time));
             shaderMaterial.SetFloat("Visibility_", visibility);
             time += Time.deltaTime * speed;

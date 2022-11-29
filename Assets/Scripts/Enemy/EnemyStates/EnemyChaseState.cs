@@ -1,21 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyChaseState : EnemyBaseState
 {
-    EnemyStateManager enemy;
+    protected EnemyStateManager enemy;
     public override void EnterState(EnemyStateManager enemy)
     {
         this.enemy = enemy;
         enemy.animator.SetBool("isWalking", true);
+        enemy.navMeshAgent.speed = enemy.baseSpeed;
+
     }
 
     public override void UpdateState()
     {
-        enemy.navMeshAgent.destination = enemy.CurrentTarget.transform.position;
-
-        if (enemy.navMeshAgent.remainingDistance <= 0.5)
+        if (enemy.navMeshAgent.remainingDistance <= enemy.CurrentTarget.StoppingDistance && !enemy.navMeshAgent.pathPending)
             enemy.SwitchState(enemy.AttackState);
     }
 }
+

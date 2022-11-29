@@ -5,11 +5,17 @@ public class PlayerStats : MonoBehaviour
     public static PlayerStats Instance { get; private set; }
     public int BaseHealth { get; private set; } = 100;
     public int BaseDamage { get; private set; } = 0;
-    public float BaseSpeed { get; private set; } = 2;
+    public float BaseSpeed { get; private set; } = 50;
 
     private int skillCount = 0;
 
     private Player player;
+
+    public readonly float FireTimer = 1f;
+    public readonly float EarthTimer = 5f;
+    public readonly float AirTimer = 10f;
+    public readonly float TornadoTimer = 5f;
+    public readonly float ShieldTimer = 3f;
 
     private void Awake()
     {
@@ -26,13 +32,9 @@ public class PlayerStats : MonoBehaviour
         player = GetComponent<Player>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void Pickup(PickupItem item)
     {
-        if (other.GetComponent<PickupItem>() == null) return;
-
-        other.gameObject.GetComponent<Animator>().SetTrigger("PickUp");
-
-        PickupItem.PickupType itemType = other.GetComponent<PickupItem>().itemType;
+        PickupItem.PickupType itemType = item.itemType;
 
         if (itemType == PickupItem.PickupType.speed)
         {
@@ -45,6 +47,9 @@ public class PlayerStats : MonoBehaviour
 
         if (itemType == PickupItem.PickupType.skill)
             AddSkill();
+
+        if (itemType == PickupItem.PickupType.health)
+            player.Heal(50);
     }
 
     private void AddSkill()

@@ -10,6 +10,10 @@ public class WizardController : Wizard, ITargettable
     private Vector3 moveDir = Vector3.zero;
     public Transform Target => transform;
 
+    public float StoppingDistance => throw new NotImplementedException();
+
+    public GameObject GameObject => throw new NotImplementedException();
+
     private void Update()
     {
         float h = Input.GetAxis("Horizontal");

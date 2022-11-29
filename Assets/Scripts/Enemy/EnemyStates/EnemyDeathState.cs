@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class EnemyDeathState : EnemyBaseState
 {
@@ -14,6 +12,8 @@ public class EnemyDeathState : EnemyBaseState
         enemy.SetColliders(false);
         enemy.gameObject.GetComponent<Collider>().enabled = false;
         SpawnManager.Instance.RemoveFromList(this.gameObject);
+        
+        DropChance.Instance.Chance(this.gameObject);
     }
 
 

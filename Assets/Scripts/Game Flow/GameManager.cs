@@ -7,8 +7,13 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI _TextMeshProUGUI;
     [SerializeField] private int wave = 1;
 
+    public static GameManager Instance;
+
     private void Awake()
     {
+        if(Instance == null)
+            Instance = this;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -34,6 +39,11 @@ public class GameManager : MonoBehaviour
     {
         SpawnManager.Instance.StartWave(wave);
         _TextMeshProUGUI.text = $"Wave: {wave}";
+    }
+
+    public void OnLose()
+    {
+        Debug.Log("You Lost");
     }
   
 }

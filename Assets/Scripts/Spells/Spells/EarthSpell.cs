@@ -19,15 +19,14 @@ public class EarthSpell : MonoBehaviour, ISpell
         this.spawnPos = spawnPos;
 
         animator.SetTrigger("earthAttack");
-        StartCoroutine(SpawnEarth(0.3f));
+        StartCoroutine(SpawnEarth(0f));
     }
 
     private IEnumerator SpawnEarth(float interval)
     {
         yield return new WaitForSeconds(interval);
-        GameObject spawnedRock = Instantiate(Earthball, spawnPos.position + (new Vector3(1,1,0) * 4f), Quaternion.identity);
-        //spawnedRock.GetComponent<Rigidbody>().AddRelativeForce(
-        //    (SpellManager.Instance.ShootDirection(SpellManager.Instance.ProjectileLayer) - spawnedRock.transform.position).normalized * 200f);
-        Destroy(spawnedRock, 8.0f);
+        GameObject spawnedRock = Instantiate(Earthball, spawnPos.position + (new Vector3(1,1,0) * 50f), 
+            Quaternion.identity);
+        Destroy(spawnedRock, 12.0f);
     }
 }

@@ -9,8 +9,8 @@ public class ViewRange : MonoBehaviour
     {
         if (other.gameObject.GetComponent<ITargettable>() != null)
         {
-            GameObject target = other.gameObject;
-            GetComponentInParent<EnemyStateManager>().CurrentTarget = target;
+            ITargettable target = other.GetComponent<ITargettable>();
+            GetComponentInParent<EnemyStateManager>().SetTarget(target);
             GetComponentInParent<EnemyStateManager>().SwitchState(GetComponentInParent<EnemyChaseState>());
         }
     }

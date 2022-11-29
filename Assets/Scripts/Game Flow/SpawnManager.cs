@@ -6,9 +6,11 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private GameObject Orc;
     [SerializeField] private GameObject Goblin;
+    [SerializeField] private GameObject Archer;
     [SerializeField] private GameObject[] Portal;
     [SerializeField] private float SpawnSpeed = 0.3f;
-    [SerializeField] private GameObject Objective;
+    [SerializeField] private GameObject ObjectiveObject;
+    public ITargettable Objective { get { return ObjectiveObject.GetComponent<ITargettable>(); } }
 
     private List<GameObject> trackedEnemies = new List<GameObject> ();
     public static SpawnManager Instance { get; private set; }
@@ -16,6 +18,7 @@ public class SpawnManager : MonoBehaviour
     public OnZeroEnemies OnZeroEnemiesCallback;
 
     private int orcNumber = 0;
+    private int archerNumber = 0;
     private int goblinNumber = 0;
     private int amountToSpawn = 0;
     private int subtractAmount = 1;
@@ -39,21 +42,30 @@ public class SpawnManager : MonoBehaviour
 
     private void SetSpawnAmount(int wave)
     {
-        goblinNumber = wave * 5;
+        goblinNumber = wave * 5; 
 
         if (wave % 3 == 0)
         {
-            orcNumber = wave / 3;
+            orcNumber = wave / 3; 
         }
         else { orcNumber = 0; }
+
+        if (wave < 3)
+        {
+            archerNumber = 0;
+            return;
+        }
+
+        archerNumber = wave * 2; 
     }
 
     private void StartSpawners()
     {
-        amountToSpawn = goblinNumber + orcNumber;
+        amountToSpawn = goblinNumber + orcNumber + archerNumber;
 
         int goblinRemainder = goblinNumber % Portal.Length;
         int orcRemainder = orcNumber % Portal.Length;
+        int archerRemainder = archerNumber % Portal.Length;
         int restOrc = orcRemainder;
 
         for (int i = 0; i < Portal.Length; i++)
@@ -79,6 +91,7 @@ public class SpawnManager : MonoBehaviour
 
             StartCoroutine(Spawner(goblinNumber / Portal.Length + goblinRemainder, Goblin, Portal[i]));
             StartCoroutine(Spawner(orcNumber / Portal.Length + orcRemainder, Orc, Portal[i]));
+            StartCoroutine(Spawner(archerNumber / Portal.Length + archerRemainder, Archer, Portal[i]));
         }
     }
 

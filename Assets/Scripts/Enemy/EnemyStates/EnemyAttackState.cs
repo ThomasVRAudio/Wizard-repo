@@ -4,32 +4,33 @@ using UnityEngine;
 
 public class EnemyAttackState : EnemyBaseState
 {
-    string anim = "smallAttack";
-    EnemyStateManager enemy;
+    protected string anim = "smallAttack";
+    protected EnemyStateManager enemy;
 
     public override void EnterState(EnemyStateManager enemy)
     {
         this.enemy = enemy;
-        anim = enemy.CurrentTarget.name == "ObjectiveTarget" ? "bigAttack" : "smallAttack";
+        anim = enemy.CurrentTarget.GameObject.name == "ObjectiveTargetCylinder" ? "bigAttack" : "smallAttack";
         enemy.animator.SetBool("isWalking", false);
-        enemy.navMeshAgent.speed = 0;      
-
+        enemy.navMeshAgent.speed = 0;
         StartAnimation(enemy);
     }
 
     public override void UpdateState()
     {
-        Vector3 targetPosition = enemy.CurrentTarget.transform.position;
-        enemy.navMeshAgent.destination = targetPosition;
-
-        var targetRotation = Quaternion.LookRotation(targetPosition - transform.position);
+        var targetRotation = Quaternion.LookRotation(enemy.CurrentTarget.GameObject.transform.position - transform.position);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 8 * Time.deltaTime);
 
-        if (enemy.navMeshAgent.remainingDistance >= 0.7)
+        if (enemy.navMeshAgent.remainingDistance >= enemy.CurrentTarget.StoppingDistance + 5)
+        {
+            if (enemy.navMeshAgent.remainingDistance > float.MaxValue || enemy.navMeshAgent.pathPending)
+                return;
             enemy.SwitchState(enemy.ChaseState);
+
+        }
     }
 
-    void StartAnimation(EnemyStateManager enemy)
+    protected virtual void StartAnimation(EnemyStateManager enemy)
     {
         enemy.animator.SetBool("isAnimatingAttack", true);
         enemy.SetColliders(true);
@@ -38,7 +39,7 @@ public class EnemyAttackState : EnemyBaseState
         enemy.OnEndAnimationCallback += OnEndAnimation;
     }
 
-    void OnEndAnimation()
+    protected void OnEndAnimation()
     {
         enemy.animator.SetBool("isAnimatingAttack", false);
         enemy.SetColliders(false);
@@ -47,7 +48,7 @@ public class EnemyAttackState : EnemyBaseState
 
     }
 
-    private IEnumerator RepeatAttack()
+    protected IEnumerator RepeatAttack()
     {
         yield return new WaitForSeconds(0.5f);
         if (enemy.CurrentState == enemy.AttackState) StartAnimation(enemy);

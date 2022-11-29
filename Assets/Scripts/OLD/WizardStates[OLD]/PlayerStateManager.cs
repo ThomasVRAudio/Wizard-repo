@@ -44,6 +44,10 @@ public class PlayerStateManager : MonoBehaviour, ITargettable, IDamageable
     public enum Spells { Fire, Earth, Tornado, Air }
     public Transform Target => transform;
 
+    [SerializeField] private float stoppingDistance = 10;
+    [HideInInspector] public float StoppingDistance { get { return stoppingDistance;  } }
+    [HideInInspector] public GameObject GameObject => GameObject;
+
     public delegate void OnEndAnimation();
     public event OnEndAnimation OnEndAnimationCallback;
 

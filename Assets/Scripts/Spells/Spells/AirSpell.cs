@@ -11,5 +11,9 @@ public class AirSpell : MonoBehaviour, ISpell
     }
 
     public void Cast(Transform spawnPos, Animator animator) => animator.SetTrigger("airAttack");
-    public void SpawnAir() => Instantiate(Airsphere, transform.position, Quaternion.identity);
+    public void SpawnAir()
+    {
+        Instantiate(Airsphere, transform.position, Quaternion.identity);
+        CameraShake.Instance.ShakeCamera(3f, 1f);
+    }
 }

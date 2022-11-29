@@ -22,22 +22,28 @@ public class PlayerCombat : MonoBehaviour
         if (hasCast)
             return;
 
-        if (Input.GetMouseButtonDown(0)) SpellCast(GetComponent<FireSpell>());
-        if (Input.GetKeyDown(KeyCode.Q)) SpellCast(GetComponent<ShieldSpell>());
-        if (Input.GetKeyDown(KeyCode.E)) SpellCast(GetComponent<EarthSpell>());
-        if (Input.GetKeyDown(KeyCode.R)) SpellCast(GetComponent<TornadoSpell>());
-        if (Input.GetKeyDown(KeyCode.T)) SpellCast(GetComponent<AirSpell>());
+        if (Input.GetMouseButtonDown(0)) SpellCast(GetComponent<FireSpell>(), PlayerStats.Instance.FireTimer);
+        if (Input.GetKeyDown(KeyCode.Q)) SpellCast(GetComponent<ShieldSpell>(), PlayerStats.Instance.ShieldTimer);
+        if (Input.GetKeyDown(KeyCode.E)) SpellCast(GetComponent<EarthSpell>(), PlayerStats.Instance.EarthTimer);
+        if (Input.GetKeyDown(KeyCode.R)) SpellCast(GetComponent<TornadoSpell>(), PlayerStats.Instance.TornadoTimer);
+        if (Input.GetKeyDown(KeyCode.T)) SpellCast(GetComponent<AirSpell>(), PlayerStats.Instance.AirTimer);
+
     }
 
-    void SpellCast(ISpell SpellType)
+    void SpellCast(ISpell SpellType, float time)
     {
         if (SpellType == null) return;
+
+        if (SpellTimer.Instance.GetTime(SpellType) > 0)
+            return;
 
         spell = SpellType;
         hasCast = true;
         player.speed = 0;
 
         spell.Cast(spellSpawnPos, player.animator);
+        SpellTimer.Instance.StartTimer(spell, time);
+        SkillUI.Instance.SetInactiveColor(spell);
         player.OnEndAnimationCallback += OnEndAnimation;
         player.animator.SetBool("IsAttacking", true);
     }

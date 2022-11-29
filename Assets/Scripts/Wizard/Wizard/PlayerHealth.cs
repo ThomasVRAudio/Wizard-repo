@@ -8,6 +8,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public int Health { get; set; } = 100;
     public int Damage { get; set; } = 0;
 
+    public delegate void OnDamage(int health);
+    public event OnDamage onDamage;
+
     private void Awake() => player = GetComponent<Player>();
     public void OnHit(int damage)
     {
@@ -16,6 +19,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (IsImmune) { return; } else { IsImmune = true; }
 
         Health -= Damage;
+        onDamage?.Invoke(Health);
         player.speed = 0;
 
         if (Health <= 0)
@@ -31,6 +35,12 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public void OnDeath() => player.animator.SetTrigger("Die");
 
+    public void Heal(int health)
+    {
+        Health = Mathf.Clamp(Health += health, 0, PlayerStats.Instance.BaseHealth);
+        HealthUI.Instance.SetHealthBar(Health);
+    }
+
     private void OnEndAnimation()
     {
         player.speed = player.startSpeed;
@@ -38,4 +48,5 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         IsImmune = false;
         player.OnEndAnimationCallback -= OnEndAnimation;
     }
+
 }

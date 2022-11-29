@@ -37,8 +37,8 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
     }
     public int Damage { get; set; } = 0;
 
-    public GameObject Objective { get; set; }
-    public GameObject CurrentTarget { get; set; }
+    public ITargettable Objective { get; set; }
+    public ITargettable CurrentTarget { get; set; }
 
     public Animator animator => GetComponent<Animator>();
     public NavMeshAgent navMeshAgent;
@@ -49,18 +49,22 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
     public delegate void OnEndAnimation();
     public event OnEndAnimation OnEndAnimationCallback;
 
-   
-
-    public void SetObjective(GameObject Objective)
+    private Vector3 targetPosition;
+    public void SetObjective(ITargettable target)
     {
         
-        this.Objective = Objective;
+        this.Objective = target;
         CurrentTarget = Objective;
+        SetStoppingDistance(target);
         CurrentState = WalkState;
         CurrentState.EnterState(this);
     }
 
-    private void Awake()
+    public virtual void SetStoppingDistance(ITargettable target) => navMeshAgent.stoppingDistance = target.StoppingDistance;
+
+    private void Awake() => Beginning();
+
+    protected virtual void Beginning()
     {
         #region Add States
         AttackState = gameObject.AddComponent<EnemyAttackState>();
@@ -74,10 +78,19 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
         SetColliders(false);
     }
 
+    private void Start() => targetPosition = CurrentTarget.GameObject.transform.position;
+
     private void Update()
     {
         if (CurrentTarget != null)
             CurrentState.UpdateState();
+
+        Vector3 currentPositionTarget = CurrentTarget.GameObject.transform.position;
+        if (targetPosition != currentPositionTarget)
+        {
+            navMeshAgent.destination = currentPositionTarget;
+            targetPosition = currentPositionTarget;
+        }
     }
 
     public void SwitchState(EnemyBaseState state)
@@ -93,16 +106,13 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
     public void ResetTarget()
     {
         CurrentTarget = Objective;
+        SetStoppingDistance(Objective);
 
         if(CurrentState != DeathState)
             SwitchState(WalkState);
     }
 
-    public void EndAnimation()
-    {
-        navMeshAgent.speed = baseSpeed;
-        OnEndAnimationCallback?.Invoke();
-    }
+    public void EndAnimation() => OnEndAnimationCallback?.Invoke();
 
     public void OnHit(int damage)
     {
@@ -118,6 +128,12 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
         {
             dCollider.gameObject.SetActive(active);
         }
+    }
+
+    public void SetTarget(ITargettable target)
+    {
+        CurrentTarget = target;
+        SetStoppingDistance(target);
     }
 }
 

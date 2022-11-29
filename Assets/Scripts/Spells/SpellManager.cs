@@ -1,6 +1,4 @@
 using UnityEngine;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
-
 public class SpellManager : MonoBehaviour
 {
     public GameObject Airsphere;
@@ -9,11 +7,12 @@ public class SpellManager : MonoBehaviour
     public GameObject Fireball;
     public Transform spawnPos;
     public Transform closeSpawnPos;
+    public Transform TornadoTarget;
     public LayerMask GroundLayer;
     public LayerMask ProjectileLayer;
     public Camera cam;
     public GameObject Shield;
-    [SerializeField] float range = 100f;
+    [SerializeField] float range = 350f;
     public static SpellManager Instance { get; private set; }
 
     private void Awake()
@@ -28,7 +27,7 @@ public class SpellManager : MonoBehaviour
     }
     public Vector3 ShootDirection(LayerMask layerMask)
     {
-       Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, range, layerMask);
-        return hit.collider == null ? cam.transform.forward * 8 : hit.point;
+        Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, range, layerMask);
+            return hit.collider == null ? cam.transform.forward * 30 : hit.point; // changed 8 to 30     
     }
 }

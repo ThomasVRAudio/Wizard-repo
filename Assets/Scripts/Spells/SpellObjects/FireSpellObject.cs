@@ -6,7 +6,7 @@ public class FireSpellObject : ProjectileSpellObject
     private Vector3 originPos;
     private Vector3 targetPos;
     private float magnitude = 0;
-    private const float speed = 5f;
+    private const float speed = 100f; //used to be 5f
     private static int fireball = 0;
     private Vector3 projectileOffset = Vector3.zero;
     [SerializeField] private AnimationCurve curve;
@@ -45,7 +45,7 @@ public class FireSpellObject : ProjectileSpellObject
         {
             transform.position = Vector3.Lerp(originPos, targetPos, time);
             transform.position += Vector3.Lerp(Vector3.zero,
-                                                    projectileOffset * magnitude / 2f * 0.1f,
+                                                    projectileOffset * magnitude / 2f * 0.2f,
                                                     curve.Evaluate(time));
             
             time += Time.deltaTime * 1f / magnitude * speed;

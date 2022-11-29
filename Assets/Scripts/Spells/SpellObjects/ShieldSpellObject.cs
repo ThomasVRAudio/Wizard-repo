@@ -13,7 +13,7 @@ public class ShieldSpellObject : SpellCreation
         originPos = transform.position;
         targetPos = SpellManager.Instance.ShootDirection(SpellManager.Instance.GroundLayer);
         float distance = Mathf.Sqrt(Vector3.Dot(targetPos - originPos, targetPos - originPos));
-        targetPos = distance > 3 ? originPos + transform.forward * 3 : targetPos;
+        targetPos = distance > 50 ? originPos + transform.forward * 50 : targetPos; // changed 3 to 20
 
     }
 

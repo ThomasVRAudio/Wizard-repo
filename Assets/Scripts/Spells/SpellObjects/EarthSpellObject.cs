@@ -6,7 +6,7 @@ public class EarthSpellObject : ProjectileSpellObject
     private Vector3 originPos;
     private Vector3 targetPos;
     private float magnitude = 0;
-    private const float speed = 5f;
+    private const float speed = 30f;
 
     private void Awake()
     {      
@@ -28,7 +28,8 @@ public class EarthSpellObject : ProjectileSpellObject
             time += Time.deltaTime * 1f / magnitude * speed;
         } else
         {
-            Destroy(this.gameObject, 0.05f);
+            Destroy(this.gameObject, 1f);
+            CameraShake.Instance.ShakeCamera(1f, 0.1f);
         }
 
         transform.Rotate(new Vector3(1,1,1));
